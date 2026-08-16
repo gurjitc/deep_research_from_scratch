@@ -9,10 +9,11 @@ The workflow uses structured output to make deterministic decisions about
 whether sufficient context exists to proceed with research.
 """
 
+import os
 from datetime import datetime
 from typing_extensions import Literal
 
-from langchain.chat_models import init_chat_model
+from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, AIMessage, get_buffer_string
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Command
@@ -29,7 +30,11 @@ def get_today_str() -> str:
 # ===== CONFIGURATION =====
 
 # Initialize model
-model = init_chat_model(model="openai:gpt-4.1", temperature=0.0)
+model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+)
 
 # ===== WORKFLOW NODES =====
 

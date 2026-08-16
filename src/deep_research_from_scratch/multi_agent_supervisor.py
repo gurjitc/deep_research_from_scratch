@@ -11,10 +11,11 @@ maintaining isolated context windows for each research topic.
 """
 
 import asyncio
+import os
 
 from typing_extensions import Literal
 
-from langchain.chat_models import init_chat_model
+from langchain_ollama import ChatOllama
 from langchain_core.messages import (
     HumanMessage, 
     BaseMessage, 
@@ -68,7 +69,12 @@ except ImportError:
 # ===== CONFIGURATION =====
 
 supervisor_tools = [ConductResearch, ResearchComplete, think_tool]
-supervisor_model = init_chat_model(model="anthropic:claude-sonnet-4-6")
+supervisor_model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+    num_ctx=32768,
+)
 supervisor_model_with_tools = supervisor_model.bind_tools(supervisor_tools)
 
 # System constants

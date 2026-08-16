@@ -5,11 +5,12 @@ This module provides search and content processing utilities for the research ag
 including web search capabilities and content summarization tools.
 """
 
+import os
 from pathlib import Path
 from datetime import datetime
 from typing_extensions import Annotated, List, Literal
 
-from langchain.chat_models import init_chat_model 
+from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool, InjectedToolArg
@@ -39,7 +40,11 @@ def get_current_dir() -> Path:
 
 # ===== CONFIGURATION =====
 
-summarization_model = init_chat_model(model="openai:gpt-4.1-mini")
+summarization_model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+)
 tavily_client = TavilyClient()
 
 # ===== SEARCH FUNCTIONS =====

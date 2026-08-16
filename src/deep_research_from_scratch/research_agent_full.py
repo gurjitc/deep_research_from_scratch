@@ -12,6 +12,7 @@ The system orchestrates the complete research workflow from initial user
 input through final report delivery.
 """
 
+import os
 from langchain_core.messages import HumanMessage
 from langgraph.graph import StateGraph, START, END
 
@@ -23,8 +24,14 @@ from deep_research_from_scratch.multi_agent_supervisor import supervisor_agent
 
 # ===== Config =====
 
-from langchain.chat_models import init_chat_model
-writer_model = init_chat_model(model="openai:gpt-4.1", max_tokens=32000) # model="anthropic:claude-sonnet-4-6", max_tokens=64000
+from langchain_ollama import ChatOllama
+
+writer_model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+    num_ctx=32768,
+)
 
 # ===== FINAL REPORT GENERATION =====
 

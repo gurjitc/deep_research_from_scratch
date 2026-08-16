@@ -18,7 +18,7 @@ import os
 
 from typing_extensions import Literal
 
-from langchain.chat_models import init_chat_model
+from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage, filter_messages
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.graph import StateGraph, START, END
@@ -53,8 +53,18 @@ def get_mcp_client():
     return _client
 
 # Initialize models
-compress_model = init_chat_model(model="openai:gpt-4.1", max_tokens=32000)
-model = init_chat_model(model="anthropic:claude-sonnet-4-6")
+compress_model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+    num_ctx=32768,
+)
+model = ChatOllama(
+    model="qwen3:8b",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    temperature=0,
+    num_ctx=32768,
+)
 
 # ===== AGENT NODES =====
 
