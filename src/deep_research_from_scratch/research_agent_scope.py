@@ -25,16 +25,13 @@ from deep_research_from_scratch.state_scope import AgentState, ClarifyWithUser, 
 
 def get_today_str() -> str:
     """Get current date in a human-readable format."""
-    return datetime.now().strftime("%a %b %-d, %Y")
+    today = datetime.now()
+    return f"{today.strftime('%a %b')} {today.day}, {today.year}"
 
 # ===== CONFIGURATION =====
 
 # Initialize model
-model = ChatOllama(
-    model="qwen3:8b",
-    base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
-    temperature=0,
-)
+model = ChatOllama(model="qwen3:8b", base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"), temperature=0, reasoning=True)
 
 # ===== WORKFLOW NODES =====
 
